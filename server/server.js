@@ -13,6 +13,15 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log(`New user connected.`);
 
+    socket.on('createMessage', (message) => {
+        console.log(`createMessage`, message);
+        io.emit(`newMessage`), {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        }
+    });
+
     socket.on('disconnect', (socket) => {
         console.log(`User was disconnected.`);
     });
@@ -24,7 +33,7 @@ server.listen(port, () => {
 
 module.exports = {app};
 
-// deploy to github from CLI
+// initial deploy to github from CLI
 // git init
 // git add .
 //  git commit -m "initial"
@@ -34,3 +43,13 @@ module.exports = {app};
 // deploy to heroku from CLI
 // heroku create
 // git push heroku master
+
+// socket.emit('newEmail', {
+//     from: `joegrotto@heir.company`,
+//     text: `hey dude`,
+//     createdAt: 123
+// });
+//
+// socket.on('createEmail', (newEmail) => {
+//     console.log(`createEmail`, newEmail);
+// });
