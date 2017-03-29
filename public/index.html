@@ -6,29 +6,27 @@
   <meta name="author" content="Socket Chat">
   <meta name="description" content="Socket Chat">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!-- What's better - using robot.txt file or meta? IDK yet :(
-      <meta name="robots" content="noodp">  -->
-   <meta name="robots" content="index, follow">
+
    <title>Socket Chat</title>
-   <!-- Disable tap highlight on IE -->
-   <meta name="msapplication-tap-highlight" content="no">
-   <!-- Color the status bar on mobile devices -->
-   <meta name="theme-color" content="#A6584D">
-   <!-- Add to homescreen for Chrome on Android  -->
-   <meta name="mobile-web-app-capable" content="yes">
-   <meta name="application-name" content="Socket Chat">
-   <!-- Add to homescreen for Safari on iOS -->
-   <meta name="apple-mobile-web-app-capable" content="yes">
-   <meta name="apple-mobile-web-app-status-bar-style" content="gray">
-   <meta name="apple-mobile-web-app-title" content="Socket Chat">
-   <!-- Tile icon for Win8 (144x144 + tile color) -->
-   <meta name="msapplication-TileImage" content="">
-   <meta name="msapplication-TileColor" content="#A6584D">
 </head>
-<body></body>
+<body>
 <header>
 <nav></nav>
 </header>
-<main></main>
+<main>
+    <h1>SocketChat</h1>
+</main>
 <footer></footer>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    let socket = io();
+    socket.on('connect', () => {
+        console.log(`Connected to Server!`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`Disconnected from Server.`);
+    });
+</script>
+</body>
 </html>
