@@ -100,14 +100,3 @@ locationButton.on('click', function () {
         alert(`Cannot fetch location without permission!`);
     });
 });
-
-// socket.on('newEmail', function(email) {
-//     console.log(`New Email Received:`, email);
-// });
-
-// socket.emit(`createMessage`, {
-//     from: `joe`,
-//     text: `sup nerd`
-// }, function(data) {
-//     console.log(`thanks... `, data);
-// });
