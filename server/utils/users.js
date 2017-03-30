@@ -4,11 +4,6 @@
     channel: `SocketChannel`
 }];
 
-//addUser(id, name, channel)
-//removeUser(id)
-//getUser(id)
-//getUserList(channel)
-
 class Users {
     constructor () {
         this.users = [];
@@ -38,17 +33,3 @@ class Users {
 };
 
 module.exports = {Users};
-
-// class Person {
-//     constructor (name, age) {
-//         this.name = name;
-//         this.age = age;
-//     }
-//     getUserDescription () {
-//         return `${this.name} is ${this.age} year(s) old`;
-//     }
-// }
-//
-// let me = new Person('joe', 26);
-// let description = me.getUserDescription();
-// console.log(description);
