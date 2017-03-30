@@ -2,13 +2,17 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+
 const {generateMessage, generateLocationMessage} = require(`./utils/message`);
+const {isRealString} = require(`./utils/validation`);
+const {Users} = require(`./utils/users`);
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 let app = express();
 let server = http.createServer(app);
 let io = socketIO(server);
+let users = new Users();
 
 app.use(express.static(publicPath));
 
@@ -16,10 +20,30 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log(`New user connected.`);
 
-//WELCOME MESSAGES
-    socket.emit('newMessage', generateMessage(`Admin`, `Welcome to the SocketChat!`));
+    // JOIN SOCKETCHANNEL
+    socket.on('join', (params, callback) => {
+        if (!isRealString(params.name) || !isRealString(params.channel)) {
+            return callback('Username and SocketChannel are required.')
+        };
+        socket.join(params.channel);
+        users.removeUser(socket.id);
+        users.addUser(socket.id, params.name, params.channel);
 
-    socket.broadcast.emit('newMessage', generateMessage(`Admin`, `New SocketChatter joined`));
+        io.to(params.channel).emit('updateUserList', users.getUserList(params.channel));
+
+        // socket.leave(params.channel);
+
+        //io.emit to all users --> io.to(params.channel).emit
+        //socket.broadcast.emit to everyone connected to server except current --> socket.broadcast.to(params.channel).emit
+        //socket.emit to one user --> same
+
+        //WELCOME MESSAGES
+        socket.emit('newMessage', generateMessage(`Admin`, `Welcome to the SocketChat!`));
+
+        socket.broadcast.to(params.channel).emit('newMessage', generateMessage(`Admin`, `${params.name} joined channel.`));
+
+        callback();
+    });
 
 // MESSAGES
     socket.on('createMessage', (message, callback) => {
@@ -34,6 +58,11 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', (socket) => {
+        let user = users.removeUser(socket.id);
+        if (user) {
+            io.to(user.channel).emit('updateUserList', users.getUserList(user.channel));
+            io.to(user.channel).emit('newMessage', generateMessage(`Admin`, `${user.name} left ${user.channel}.`));
+        }
         console.log(`User was disconnected.`);
     });
 });
